@@ -1,87 +1,92 @@
 <template>
-    <v-container class="px-0 py-0">
-        <v-row>
-            <v-snackbar top right v-model="snack.show" :color="snack.color">
-                {{ snack.message }}
-                <v-btn class="float-end" icon @click="snack.show = false"><v-icon>mdi-close</v-icon></v-btn>
-            </v-snackbar>
+    <v-container class="px-4 py-2" style="height: 90vh; max-width: 420px;">
+        <v-row class="justify-center mt-6 mb-6">
+            <v-img class="" src="/logo2.png"></v-img>
         </v-row>
         <v-row class="justify-center">
-            <v-col cols="12" md="8" lg="4" class="px-0 mx-0 py-0">
-                <v-card class="" style="height: 100vh; border: solid purple 2px;">
-                    <v-form class="mt-16">
-                        <v-img class="mb-10 mt-5" src="/logo.png"></v-img>
-                        <v-card-text>
-                            <v-text-field
-                                color="purple"
-                                v-model="formData.email"
-                                prepend-inner-icon="mdi-email"
-                                outlined
-                                name="login"
-                                label="Email"
-                                type="text"
-                            ></v-text-field>
-                            <v-text-field
-                                color="purple"
-                                prepend-inner-icon="mdi-lock"
-                                outlined
-                                v-model="formData.password"
-                                label="Senha"
-                                type="password"
-                            ></v-text-field>
-                        </v-card-text>
-                        <v-card-actions>
-                            <v-btn color="purple" block dark large @click="doLogin">
-                                Login
-                            </v-btn>
-                        </v-card-actions>
-                    </v-form>
-                </v-card>
+            <v-col cols="12" md="12" lg="12" class="px-0 mx-0 py-0">
+                <v-form class="">
+                        <v-text-field
+                            color="purple"
+                            prepend-inner-icon="mdi-email"
+                            v-model="formData.email"
+                            outlined
+                            name="login"
+                            label="Email"
+                            :error-messages="errorMessages.email"
+                            type="text"
+                        ></v-text-field>
+                        <v-text-field
+                            color="purple"
+                            prepend-inner-icon="mdi-lock"
+                            v-model="formData.password"
+                            :error-messages="errorMessages.password"
+                            outlined
+                            label="Senha"
+                            type="password"
+                        ></v-text-field>
+                        <v-btn color="purple" block dark large @click="login">
+                            Entrar
+                        </v-btn>
+                </v-form>
             </v-col>
         </v-row>
+        <v-row class="justify-space-between mt-2">
+            <span class="login-link purple--text subtitle-1">Esqueceu a senha?</span>
+<!--            <v-btn class="mt-2 text-none" text rounded dark color="purple">Esqueceu a senha?</v-btn>-->
+<!--            <v-btn class="mt-2 text-none" text rounded dark color="purple">Registre-se</v-btn>-->
+            <span class="login-link purple--text subtitle-1">Registre-se</span>
+        </v-row>
+<!--        <v-row class="justify-center mt-10">-->
+<!--            <v-btn small dark color="purple">Registre-se</v-btn>-->
+<!--        </v-row>-->
     </v-container>
 </template>
 
-
 <script>
+import ErrorHandler from "~/services/ErrorHandler";
+
 export default {
-    auth: 'guest',
     name: "login",
     layout: 'clean',
+    auth: 'guest',
     data: () => ({
-        snack: {
-            show: false,
-            message: '',
-            color: 'success',
-        },
         formData: {
-            email: '',
-            password: ''
-        }
-    }),
-    mounted() {
-    },
-    methods: {
-        showSnack (message, color) {
-            this.snack.show = true;
-            this.snack.message = message;
-            this.snack.color = color;
+            email: 'teste@oi.com',
+            password: '12345678'
         },
-        async doLogin() {
+        errorMessages: {}
+    }),
+    methods: {
+        login: async function () {
             try {
                 this.$nuxt.$loading.start();
-                const response = await this.$axios.post('/auth/login', this.formData);
+                await this.$axios.post('/auth/login', this.formData);
                 await this.$auth.login({data: this.formData});
                 this.$nuxt.$loading.finish();
                 await this.$router.push({path: '/'})
-            } catch (e) {
+            } catch (error) {
                 await this.$nuxt.$loading.finish();
-                let error = '';
-                if (e && e.response && e.response.data && e.response.data.error) {
-                    error = e.response.data.error;
-                    console.log(e.response.data.error);
+                const errorMessages = ErrorHandler.getMessagesByFormRequestValidations(error);
+                if (errorMessages) {
+                    this.errorMessages = errorMessages ?? this.errorMessages;
+                } else {
+                    const msg = ErrorHandler.getError(error);
+                    if (msg === 'Unauthorized') {
+                        await this.$dialog.error({
+                            title: 'Erro',
+                            text: 'Email e/ou senha inválidos',
+                        });
+                    } else if (msg === 'Unchecked') {
+                        const user = {email: this.formData.email.toString()};
+                        await this.$router.push({name: 'auth-account-validation', params: {user: user}});
+                    } else {
+                        await this.$dialog.error({
+                            title: 'Erro',
+                            text: msg,
+                        });
+                    }
                 }
-                this.showSnack(`Erro ao logar! ${error}` , 'error')
             }
         }
     }
@@ -89,6 +94,13 @@ export default {
 </script>
 
 <style scoped>
+.login-link {
+    font-size: 1.1rem !important;
+    margin-top: 10px;
+}
 
-
+.login-link:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
 </style>

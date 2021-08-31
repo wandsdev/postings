@@ -36,7 +36,7 @@
             </v-col>
         </v-row>
         <v-row class="flex-column align-content-center mt-5">
-            <span class="login-link purple--text subtitle-1 text-decoration-underline">Reenviar código de verificação</span>
+            <span @click="resendValidationCode" class="login-link purple--text subtitle-1 text-decoration-underline">Reenviar código de verificação</span>
         </v-row>
 
     </v-container>
@@ -91,7 +91,32 @@ export default {
                     });
                 }
             }
+        },
+        async resendValidationCode() {
+            try {
+                this.$nuxt.$loading.start();
+                const data = { email: this.formData.email }
+                await this.$axios.post('/auth/resend_validation_code', data);
+                this.$nuxt.$loading.finish();
+                await this.$dialog.info({
+                    title: 'Info',
+                    text: 'Um novo código foi enviado para seu email.',
+                });
+            } catch (error) {
+                this.$nuxt.$loading.finish();
+                const errorMessages = ErrorHandler.getMessagesByFormRequestValidations(error);
+                if (errorMessages) {
+                    this.errorMessages = errorMessages ?? this.errorMessages;
+                } else {
+                    const msg = ErrorHandler.getError(error);
+                    await this.$dialog.error({
+                        title: 'Erro',
+                        text: msg,
+                    });
+                }
+            }
         }
+
     }
 }
 </script>

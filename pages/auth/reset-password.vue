@@ -51,7 +51,7 @@
         </v-row>
         <v-row class="flex-column align-center mt-4">
             <span class="login-link purple--text subtitle-1 text-decoration-underline" @click="forgotPassword">Reenviar código de verificação</span>
-            <span class="login-link purple--text subtitle-1 text-decoration-underline mb-10">Fazer login</span>
+            <span class="login-link purple--text subtitle-1 text-decoration-underline mb-10" @click="$router.push({ 'name': 'auth-login'})">Fazer login</span>
         </v-row>
     </v-container>
 </template>

@@ -32,14 +32,11 @@
             </v-col>
         </v-row>
         <v-row class="justify-space-between mt-2">
-            <span class="login-link purple--text subtitle-1">Esqueceu a senha?</span>
+            <span class="login-link purple--text subtitle-1" @click="$router.push({ name: 'auth-forgot-password'})">Esqueceu a senha?</span>
 <!--            <v-btn class="mt-2 text-none" text rounded dark color="purple">Esqueceu a senha?</v-btn>-->
 <!--            <v-btn class="mt-2 text-none" text rounded dark color="purple">Registre-se</v-btn>-->
-            <span class="login-link purple--text subtitle-1">Registre-se</span>
+            <span class="login-link purple--text subtitle-1" @click="$router.push({ name: 'auth-register'})">Registre-se</span>
         </v-row>
-<!--        <v-row class="justify-center mt-10">-->
-<!--            <v-btn small dark color="purple">Registre-se</v-btn>-->
-<!--        </v-row>-->
     </v-container>
 </template>
 

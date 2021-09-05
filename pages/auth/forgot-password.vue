@@ -45,7 +45,7 @@ export default {
     layout: 'clean',
     data: () => ({
         formData: {
-            email: 'teste@oi.com'
+            email: ''
         },
         errorMessages: {}
     }),

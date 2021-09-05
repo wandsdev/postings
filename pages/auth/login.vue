@@ -49,8 +49,8 @@ export default {
     auth: 'guest',
     data: () => ({
         formData: {
-            email: 'teste@oi.com',
-            password: '12345678'
+            email: '',
+            password: ''
         },
         errorMessages: {}
     }),

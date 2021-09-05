@@ -109,11 +109,15 @@
                 </v-card>
             </v-dialog>
         </v-row>
+        <v-row justify="center">
+            <span v-if="!periods.length" class="purple--text mt-2">Não há dados</span>
+        </v-row>
     </div>
 </template>
 
 <script>
 import Confirm from "~/components/Confirm";
+import ErrorHandler from "~/services/ErrorHandler";
 export default {
     components: { Confirm },
     data: () => ({
@@ -140,6 +144,12 @@ export default {
             const periods = this.findPeriods();
             Promise.all([postings, people, periods]).then(() => {
                 this.$nuxt.$loading.finish();
+            }).catch((error) => {
+                const msg = ErrorHandler.getError(error);
+                this.$dialog.error({
+                    title: 'Erro',
+                    text: msg,
+                });
             });
         });
     },

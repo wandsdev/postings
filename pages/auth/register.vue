@@ -69,10 +69,10 @@ export default {
     layout: 'clean',
     data: () => ({
         formData: {
-            name: 'teste',
-            email: 'teste@oi.com',
-            password: '12345678',
-            password_confirmation: '12345678'
+            name: '',
+            email: '',
+            password: '',
+            password_confirmation: ''
         },
         valid: true,
         errorMessages: {},

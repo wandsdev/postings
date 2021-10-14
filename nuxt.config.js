@@ -41,7 +41,7 @@ export default {
         strategies: {
             'laravelJWT': {
                 provider: 'laravel/jwt',
-                url: 'http://127.0.0.1:8000',
+                url: 'http://127.0.0.1:8001',
                 endpoints: {
                     login: {
                         url: '/api/auth/login', method: 'post'
@@ -107,7 +107,7 @@ export default {
 
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {
-        baseURL: 'http://127.0.0.1:8000/api',
+        baseURL: 'http://127.0.0.1:8001/api',
         credentials: false,
         proxyHeaders: false,
     },

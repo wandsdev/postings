@@ -54,6 +54,15 @@ export default {
         },
         errorMessages: {}
     }),
+    async mounted() {
+        const response = await this.$axios.$get('https://jsonplaceholder.typicode.com/todos/1');
+        const msg = `id => ${response.id}, Titulo => ${response.title} `;
+        this.$dialog.info({
+            title: 'Informação',
+            text: msg,
+        });
+        console.log(response);
+    },
     methods: {
         login: async function () {
             try {

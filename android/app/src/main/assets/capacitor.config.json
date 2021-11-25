@@ -1,0 +1,6 @@
+{
+	"appId": "com.postings.www",
+	"appName": "PostingsApp",
+	"webDir": "dist",
+	"bundledWebRuntime": false
+}
